@@ -1,0 +1,402 @@
+     1                                  ;------------------------------------------------------------------------------
+     2                                  ; perimeter.asm - единица компиляции, вбирающая функции вычисления идеального времени и сортировки контейнера
+     3                                  ;------------------------------------------------------------------------------
+     4                                  extern printf
+     5                                  extern TRAIN
+     6                                  extern SHIP
+     7                                  extern PLANE
+     8                                  extern OutShape
+     9                                  ;----------------------------------------------
+    10                                  ; Вычисление идеального времени поезда
+    11                                  
+    12                                  global IdealTimeTrain
+    13                                  IdealTimeTrain:
+    14                                  section .bss
+    15 00000000 <res 00000008>              d       resq    1
+    16                                  
+    17                                  section .text
+    18 00000000 55                      push rbp
+    19 00000001 4889E5                  mov rbp, rsp
+    20                                  
+    21                                      ; В rdi адрес поезда
+    22 00000004 8B4704                      mov     eax, [rdi+4]
+    23 00000007 F20F2AC0                    cvtsi2sd    xmm0, eax
+    24 0000000B F20F110425-                 movsd [d], xmm0
+    24 00000010 [00000000]         
+    25 00000014 F20F104708                  movsd   xmm0,[rdi+8]
+    26 00000019 F20F100C25-                 movsd   xmm1, [d]
+    26 0000001E [00000000]         
+    27 00000022 F20F5EC1                    divsd    xmm0, xmm1
+    28                                  
+    29 00000026 C9                      leave
+    30 00000027 C3                      ret
+    31                                  
+    32                                  ;----------------------------------------------
+    33                                  ; double IdealTimeShip(void *t) {
+    34                                  ;    return (double)(*((int*)t)
+    35                                  ;       + *((int*)(t+intSize))
+    36                                  ;       + *((int*)(t+2*intSize)));
+    37                                  ;}
+    38                                  global IdealTimeShip
+    39                                  IdealTimeShip:
+    40                                  section .bss
+    41 00000008 <res 00000008>              .d       resq    1
+    42                                  
+    43                                  section .text
+    44 00000028 55                      push rbp
+    45 00000029 4889E5                  mov rbp, rsp
+    46                                  
+    47                                      ; В rdi адрес ship
+    48 0000002C 8B4708                      mov     eax, [rdi+8]
+    49 0000002F F20F2AC0                    cvtsi2sd    xmm0, eax
+    50 00000033 F20F110425-                 movsd [.d], xmm0
+    50 00000038 [08000000]         
+    51 0000003C F20F10470C                  movsd   xmm0,[rdi+12]
+    52 00000041 F20F100C25-                 movsd   xmm1, [.d]
+    52 00000046 [08000000]         
+    53 0000004A F20F5EC1                    divsd    xmm0, xmm1
+    54                                  
+    55 0000004E C9                      leave
+    56 0000004F C3                      ret
+    57                                  
+    58                                  global IdealTimePlane
+    59                                  IdealTimePlane:
+    60                                  section .bss
+    61 00000010 <res 00000008>              .d       resq    1
+    62                                  
+    63                                  section .text
+    64 00000050 55                      push rbp
+    65 00000051 4889E5                  mov rbp, rsp
+    66                                  
+    67                                      ; В rdi адрес ship
+    68 00000054 8B4708                      mov     eax, [rdi+8]
+    69 00000057 F20F2AC0                    cvtsi2sd    xmm0, eax
+    70 0000005B F20F110425-                 movsd [.d], xmm0
+    70 00000060 [10000000]         
+    71 00000064 F20F10470C                  movsd   xmm0,[rdi+12]
+    72 00000069 F20F100C25-                 movsd   xmm1, [.d]
+    72 0000006E [10000000]         
+    73 00000072 F20F5EC1                    divsd    xmm0, xmm1
+    74                                  
+    75 00000076 C9                      leave
+    76 00000077 C3                      ret
+    77                                  ;----------------------------------------------
+    78                                  ; Вычисление периметра фигуры
+    79                                  ;double PerimeterShape(void *s) {
+    80                                  ;    int k = *((int*)s);
+    81                                  ;    if(k == RECTANGLE) {
+    82                                  ;        return PerimeterRectangle(s+intSize);
+    83                                  ;    }
+    84                                  ;    else if(k == TRIANGLE) {
+    85                                  ;        return IdealTimeShip(s+intSize);
+    86                                  ;    }
+    87                                  ;    else {
+    88                                  ;        return 0.0;
+    89                                  ;    }
+    90                                  ;}
+    91                                  global PerimeterShape
+    92                                  PerimeterShape:
+    93                                  section .text
+    94 00000078 55                      push rbp
+    95 00000079 4889E5                  mov rbp, rsp
+    96                                  
+    97                                      ; В rdi адрес фигуры
+    98 0000007C 8B07                        mov eax, [rdi]
+    99 0000007E 3B0425[00000000]            cmp eax, [TRAIN]
+   100 00000085 741A                        je idealTimeTrain
+   101 00000087 3B0425[00000000]            cmp eax, [SHIP]
+   102 0000008E 741C                        je idealTimeship
+   103 00000090 3B0425[00000000]            cmp eax, [PLANE]
+   104 00000097 741E                        je idealTimePlane
+   105 00000099 31C0                        xor eax, eax
+   106 0000009B F20F2AC0                    cvtsi2sd    xmm0, eax
+   107 0000009F EB21                        jmp     return
+   108                                  idealTimeTrain:
+   109                                      ; Вычисление идеального времени поезда
+   110 000000A1 4883C704                    add     rdi, 4
+   111 000000A5 E856FFFFFF                  call    IdealTimeTrain
+   112 000000AA EB16                        jmp     return
+   113                                  idealTimeship:
+   114                                      ; Вычисление идеального времени корабля.
+   115 000000AC 4883C704                    add     rdi, 4
+   116 000000B0 E873FFFFFF                  call    IdealTimeShip
+   117 000000B5 EB0B                        jmp     return
+   118                                  idealTimePlane:
+   119                                      ; Вычисление идеального времени корабля.
+   120 000000B7 4883C704                    add     rdi, 4
+   121 000000BB E890FFFFFF                  call    IdealTimePlane
+   122 000000C0 EB00                        jmp     return
+   123                                  return:
+   124 000000C2 C9                      leave
+   125 000000C3 C3                      ret
+   126                                  
+   127                                  ;----------------------------------------------
+   128                                  ;// Сортировка Шелла
+   129                                  ;string ShellSort(container &c) {
+   130                                  ;    int first = 0, last = c.len;
+   131                                  ;    for (auto d = (last - first) / 2; d != 0; d /= 2)
+   132                                  ;        for (auto i = first + d; i != last; ++i)
+   133                                  ;            for (auto j = i; j - first >= d && IdealTime(*c.cont[j]) < IdealTime(*c.cont[(j - d)]); j -= d) {
+   134                                  ;                auto tmp = *c.cont[j];
+   135                                  ;                *c.cont[j] = *c.cont[(j - d)];
+   136                                  ;                *c.cont[(j - d)] = tmp;
+   137                                  ;            }
+   138                                  ;    return "Container was sorted.";
+   139                                  ;}
+   140                                  global PerimeterSumContainer
+   141                                  PerimeterSumContainer:
+   142                                  section .data
+   143 00000000 0000000000000000            .sum    dq  0
+   144 00000008 6669727374203D2025-         .outf db "first = %d,second = %d %d",10,0
+   144 00000011 642C7365636F6E6420-
+   144 0000001A 3D2025642025640A00 
+   145 00000023 64203D2025640A00            .outf1 db "d = %d",10,0
+   146 0000002B 72646931203D202564-         .outf2 db "rdi1 = %d , rdi2 = %d",10,0
+   146 00000034 202C2072646932203D-
+   146 0000003D 2025640A00         
+   147 00000042 776F726B0A00                .outf3 db "work",10,0
+   148 00000048 786D6D30203D20256C-         .outf4 db "xmm0 = %lg %d, xmm1 = %lg",10,0
+   148 00000051 672025642C20786D6D-
+   148 0000005A 31203D20256C670A00 
+   149 00000063 726469203D2025642C-         .outf5 db "rdi = %d, rsi = %d",10,0
+   149 0000006C 20727369203D202564-
+   149 00000075 0A00               
+   150 00000077 00                          .zero db 0
+   151 00000078 18                          .two db 24
+   152                                      
+   153 00000079 727369203D2025642C-         .outf6 db "rsi = %d, rdi = %d ", 10 , 0
+   153 00000082 20726469203D202564-
+   153 0000008B 200A00             
+   154                                  section .bss
+   155 00000018 <res 00000008>              .first resq 1
+   156 00000020 <res 00000008>              .last resq 1
+   157 00000028 <res 00000008>              .len resq 1
+   158 00000030 <res 00000008>              .d resq 1
+   159 00000038 <res 00000008>              .i resq 1
+   160 00000040 <res 00000008>              .j resq 1
+   161 00000048 <res 00000008>              .g resq 1
+   162 00000050 <res 00000008>              .start resq 1 ; начало контейнера
+   163 00000058 <res 00000008>              .idealtime1 resq 1;
+   164 00000060 <res 00000008>              .idealtime2 resq 1;
+   165 00000068 <res 00000010>              .adress1 resq 2;
+   166 00000078 <res 00000008>              .adress2 resq 1;
+   167                                  section .text
+   168 000000C4 55                      push rbp
+   169 000000C5 4889E5                  mov rbp, rsp
+   170                                  
+   171                                      ; В rdi адрес начала контейнера
+   172 000000C8 48893C25[50000000]          mov [.start], rdi
+   173 000000D0 893425[20000000]            mov [.last], esi            ; число фигур
+   174 000000D7 BE00000000                  mov esi, 0
+   175 000000DC 893425[18000000]            mov [.first] , esi
+   176                                      
+   177                                  ;    mov rdi, .outf
+   178                                  ;    mov rsi,[.first]
+   179                                  ;    mov rdx, [.last]
+   180                                  ;    mov rax, 0
+   181                                  ;    call printf
+   182 000000E3 488B3425[20000000]          mov rsi, [.last] ;d = (last - first) / 2
+   183 000000EB 482B3425[18000000]          sub rsi,[.first]
+   184 000000F3 48D1FE                      sar rsi, 1
+   185 000000F6 48893425[30000000]          mov [.d], rsi
+   186                                      
+   187                                  ;    mov rdi, .outf1
+   188                                  ;    mov rsi, [.d]
+   189                                  ;    mov rax,0
+   190                                  ;    call printf
+   191                                  .firstloop: ;for (auto d = (last - first) / 2; d != 0; d /= 2)
+   192 000000FE 488B3425[30000000]          mov rsi, [.d] ;if(d == 0) break
+   193 00000106 4883FE00                    cmp rsi, 0
+   194 0000010A 0F8400020000                je .return
+   195                                      
+   196 00000110 488B3425[18000000]          mov rsi, [.first] ;auto i = first + d
+   197 00000118 48033425[30000000]          add rsi, [.d]
+   198 00000120 48893425[38000000]          mov [.i], rsi
+   199                                      
+   200 00000128 48BF-                       mov rdi, .outf1
+   200 0000012A [2300000000000000] 
+   201 00000132 488B3425[38000000]          mov rsi, [.i]
+   202 0000013A B800000000                  mov rax,0
+   203 0000013F E8(00000000)                call printf
+   204                                      .secondloop: ;for (auto i = first + d; i != last; ++i)
+   205 00000144 488B3425[38000000]              mov rsi, [.i] ; if(i == last) break;
+   206 0000014C 483B3425[20000000]              cmp rsi,[.last]
+   207 00000154 0F849E010000                    je .continueFirstLoop
+   208                                          
+   209 0000015A 488B3425[38000000]              mov rsi,[.i] ;j = i
+   210 00000162 48893425[40000000]              mov [.j], rsi
+   211                                          
+   212                                          ;mov rdi, .outf1
+   213                                  ;        mov rsi, [.j]
+   214                                  ;        mov rax,0
+   215                                  ;        call printf
+   216                                          .3loop: ;for (auto j = i; j - first >= d && IdealTime(*c.cont[j]) < IdealTime(*c.cont[(j - d)]); j -= d)
+   217 0000016A 488B3425[40000000]                  mov rsi,[.j]     ;if(j - first < d) break
+   218 00000172 482B3425[18000000]                  sub rsi,[.first]
+   219                                              
+   220 0000017A 48BF-                              mov rdi, .outf1
+   220 0000017C [2300000000000000] 
+   221 00000184 B800000000                          mov rax,0
+   222 00000189 E8(00000000)                        call printf
+   223                                              
+   224 0000018E 483B3425[30000000]                  cmp rsi, [.d]
+   225 00000196 0F8C44010000                        jl .continue2loop
+   226                                              
+   227 0000019C 488B3C25[50000000]                  mov rdi, [.start];*c.cont[j] in rdi
+   228 000001A4 488B3425[40000000]                  mov rsi, [.j]
+   229 000001AC 486BF618                            imul rsi, 24
+   230 000001B0 4801F7                              add rdi, rsi
+   231 000001B3 48893C25[68000000]                  mov [.adress1], rdi
+   232                                            ;  mov [.start], rdi
+   233                                  ;            mov rdi, .outf3
+   234                                  ;            mov rax, 0
+   235                                  ;            call printf
+   236                                  ;                mov rax , rdi
+   237                                  ;                mov rdi, .outf
+   238                                  ;                mov rsi,[rax]
+   239                                  ;                mov rdx, [rax+4]
+   240                                  ;                mov rcx, [rax+8]
+   241                                  ;                mov rax, 0
+   242                                  ;                call printf
+   243                                  ;                mov rdi, rax
+   244                                              
+   245                                              ;call OutShape             
+   246 000001BB E8B8FEFFFF                          call PerimeterShape ;результат в xmm0
+   247                                              
+   248                                            ; mov [.start], rdi
+   249                                  ;            mov rdi, .outf3
+   250                                  ;            mov rax, 0
+   251                                  ;            call printf
+   252                                              
+   253 000001C0 F20F110425-                         movsd [.idealtime1], xmm0 ; IdealTime(*c.cont[j]) .idealtime1
+   253 000001C5 [58000000]         
+   254                                              
+   255 000001C9 488B3C25[50000000]                  mov rdi, [.start];*c.cont[j-d] in rdi
+   256 000001D1 488B3425[40000000]                  mov rsi, [.j]
+   257 000001D9 482B3425[30000000]                  sub rsi, [.d]
+   258 000001E1 486BF618                            imul rsi, 24
+   259 000001E5 4801F7                              add rdi, rsi          
+   260                                              ;mov r8, [rdi+4]   
+   261 000001E8 48893C25[78000000]                  mov [.adress2], rdi
+   262 000001F0 E883FEFFFF                          call PerimeterShape ;результат в xmm0 IdealTime(*c.cont[(j - d)])
+   263                                              
+   264                                  
+   265                                  ;            mov rdi, .outf4
+   266                                  ;            mov rsi, r8
+   267                                  ;            mov rax, 1
+   268                                  ;            call printf
+   269 000001F5 F20F10C8                            movsd xmm1, xmm0
+   270 000001F9 F20F110425-                         movsd [.idealtime2], xmm0
+   270 000001FE [60000000]         
+   271 00000202 F20F100425-                         movsd xmm0, [.idealtime1]
+   271 00000207 [58000000]         
+   272                                  ;            
+   273 0000020B 48BF-                               mov rdi, .outf4
+   273 0000020D [4800000000000000] 
+   274 00000215 4C89C6                              mov rsi, r8
+   275 00000218 B801000000                          mov rax, 1
+   276 0000021D E8(00000000)                        call printf
+   277                                              
+   278                                  ;            mov rdi, .outf3
+   279                                  ;            mov rax, 0
+   280                                  ;            call printf
+   281                                              
+   282 00000222 F20F100425-                         movsd xmm0, [.idealtime1]
+   282 00000227 [58000000]         
+   283 0000022B F20F100C25-                         movsd xmm1, [.idealtime2]
+   283 00000230 [60000000]         
+   284                                  
+   285 00000234 FC                                  cld
+   286                                              ;cmpsd
+   287                                              ;comiss  xmm0 , xmm1 ;IdealTime(*c.cont[j])? IdealTime(*c.cont[(j - d)])
+   288 00000235 660F2EC1                            UCOMISD xmm0,xmm1
+   289 00000239 0F83A1000000                        jnb .continue2loop ;if (IdealTime(*c.cont[j]) >= IdealTime(*c.cont[(j - d)])) break;
+   290                                  
+   291                                              ;comiss  xmm0 , xmm1 ;IdealTime(*c.cont[j])? IdealTime(*c.cont[(j - d)])
+   292                                              ;je .continue2loop
+   293                                              
+   294                                  
+   295 0000023F 48BF-                               mov rdi, .outf3
+   295 00000241 [4200000000000000] 
+   296 00000249 B800000000                          mov rax, 0
+   297 0000024E E8(00000000)                        call printf
+   298                                              ;код обмена
+   299                                               
+   300                                              ;mov rax, [.adress1]
+   301                                  ;            mov rdi, [rax]
+   302                                  ;            mov rax, [.adress2]
+   303                                  ;            mov rsi, [rax]
+   304                                  ;            mov rsi, rdi
+   305                                  ;            mov rdx, rsi
+   306                                  ;            mov rdi, .outf6
+   307                                  ;            mov rax, 0
+   308                                  ;            call printf
+   309                                              
+   310                                  ;            mov rdi, [.adress1]
+   311                                  ;            mov rsi, [.adress2]
+   312                                              ;XCHG rdi, rsi
+   313 00000253 B800000000                          mov rax , 0
+   314 00000258 48890425[48000000]                  mov [.g] , rax
+   315                                              .change:
+   316 00000260 488B0425[48000000]                      mov rax, [.g]
+   317 00000268 4883F806                                cmp rax, 6
+   318 0000026C 7455                                    je .endchange
+   319 0000026E 4C8B0425[48000000]                      mov r8, [.g]
+   320 00000276 4D6BC004                                imul r8, 4
+   321                                                  
+   322 0000027A 488B0425[68000000]                      mov rax, [.adress1]
+   323 00000282 4C01C0                                  add rax, r8
+   324 00000285 8B08                                    mov ecx, [rax]
+   325                                                  
+   326 00000287 488B0425[78000000]                      mov rax, [.adress2]
+   327 0000028F 4C01C0                                  add rax, r8
+   328 00000292 8B10                                    mov edx, [rax]
+   329                                                  
+   330 00000294 488B0425[68000000]                      mov rax, [.adress1]
+   331 0000029C 4C01C0                                  add rax, r8
+   332 0000029F 8910                                    mov [rax],edx
+   333                                                  
+   334 000002A1 488B0425[78000000]                      mov rax, [.adress2]
+   335 000002A9 4C01C0                                  add rax, r8
+   336 000002AC 8908                                    mov [rax], ecx
+   337                                                  
+   338 000002AE 488B0425[48000000]                      mov rax, [.g]; g++
+   339 000002B6 48FFC0                                  inc rax
+   340 000002B9 48890425[48000000]                      mov [.g], rax
+   341 000002C1 EB9D                                    jmp .change
+   342                                              
+   343                                              
+   344                                              ;код обмена
+   345                                              .endchange:
+   346 000002C3 488B3425[40000000]                  mov rsi, [.j];j -= d
+   347 000002CB 482B3425[30000000]                  sub rsi, [.d];
+   348 000002D3 48893425[40000000]                  mov [.j], rsi
+   349 000002DB E98AFEFFFF                          jmp .3loop
+   350                                          .continue2loop:
+   351 000002E0 488B3425[38000000]              mov rsi, [.i]; ++i
+   352 000002E8 48FFC6                          inc rsi
+   353 000002EB 48893425[38000000]              mov [.i],rsi
+   354 000002F3 E94CFEFFFF                      jmp .secondloop
+   355                                      .continueFirstLoop:
+   356 000002F8 488B3425[30000000]          mov rsi, [.d];d /= 2
+   357 00000300 48D1FE                      sar rsi, 1
+   358 00000303 48893425[30000000]          mov [.d], rsi
+   359 0000030B E9EEFDFFFF                  jmp .firstloop
+   360                                  ; СУММА ПЕРИМЕТРОВ:
+   361                                  ;    xor ecx, ecx            ; счетчик фигур
+   362                                  ;    movsd xmm1, [.sum]      ; перенос накопителя суммы в регистр 1
+   363                                  ;.loop:
+   364                                  ;    cmp ecx, ebx            ; проверка на окончание цикла
+   365                                  ;    jge .return             ; Перебрали все фигуры
+   366                                  ;
+   367                                  ;    mov r10, rdi            ; сохранение начала фигуры
+   368                                  ;    call PerimeterShape     ; Получение периметра первой фигуры
+   369                                  ;    addsd xmm1, xmm0        ; накопление суммы
+   370                                  ;    inc rcx                 ; индекс следующей фигуры
+   371                                  ;    add r10, 24             ; адрес следующей фигуры
+   372                                  ;    mov rdi, r10            ; восстановление для передачи параметра
+   373                                  ;    jmp .loop
+   374                                  .return:
+   375 00000310 F20F10C1                    movsd xmm0, xmm1
+   376 00000314 C9                      leave
+   377 00000315 C3                      ret

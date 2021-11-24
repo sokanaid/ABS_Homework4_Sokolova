@@ -1,0 +1,254 @@
+     1                                  ; file.asm - использование файлов в NASM
+     2                                  extern printf
+     3                                  extern fscanf
+     4                                  
+     5                                  extern TRAIN
+     6                                  extern SHIP
+     7                                  extern PLANE
+     8                                  
+     9                                  ;----------------------------------------------
+    10                                  ; Ввод параметров поезда из файла
+    11                                  global InTrain
+    12                                  InTrain:
+    13                                  section .data
+    14 00000000 25642564256C6700            .infmt db "%d%d%lg",0
+    15                                  section .bss
+    16 00000000 <res 00000008>              .FILE   resq    1   ; временное хранение указателя на файл
+    17 00000008 <res 00000008>              .prect  resq    1   ; адрес поезда
+    18                                  section .text
+    19 00000000 55                      push rbp
+    20 00000001 4889E5                  mov rbp, rsp
+    21                                  
+    22                                      ; Сохранение принятых аргументов
+    23 00000004 48893C25[08000000]          mov     [.prect], rdi          ; сохраняется адрес поезда
+    24 0000000C 48893425[00000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+    25                                  
+    26                                      ; Ввод поезда из файла
+    27 00000014 488B3C25[00000000]          mov     rdi, [.FILE]
+    28 0000001C 48BE-                       mov     rsi, .infmt         ; Формат - 1-й аргумент
+    28 0000001E [0000000000000000] 
+    29 00000026 488B1425[08000000]          mov     rdx, [.prect]       ; &x - int numberOfRailwayCarriage 
+    30 0000002E 488B0C25[08000000]          mov     rcx, [.prect]
+    31 00000036 4883C104                    add     rcx, 4              ; &y = &x + 4 - int speed
+    32 0000003A 4C8B0425[08000000]          mov     r8, [.prect]     
+    33 00000042 4983C008                    add     r8, 8               ;&z = &x + 4+4 - double distance
+    34 00000046 B801000000                  mov     rax, 1
+    35 0000004B E8(00000000)                call    fscanf   
+    36 00000050 C9                      leave
+    37 00000051 C3                      ret
+    38                                  
+    39                                  ; // Ввод параметров ship из файла
+    40                                  ;void In(ship &s, ifstream &ifst) {
+    41                                  ;    int type;
+    42                                  ;    ifst >> double s.displacement >> int type >> int s.speed >> double s.distance;
+    43                                  ;    s.type = (shipType)type;
+    44                                  ;}
+    45                                  ;
+    46                                  global InShip
+    47                                  InShip:
+    48                                  section .data
+    49 00000008 256425642564256C67-         .infmt db "%d%d%d%lg",0
+    49 00000011 00                 
+    50 00000012 496E7368697000              .outf db "Inship",0
+    51                                  
+    52                                  section .bss
+    53 00000010 <res 00000008>              .FILE   resq    1   ; временное хранение указателя на файл
+    54 00000018 <res 00000008>              .trian  resq    1   ; адрес ship
+    55                                  section .text
+    56 00000052 55                      push rbp
+    57 00000053 4889E5                  mov rbp, rsp
+    58                                  
+    59                                      ; Сохранение принятых аргументов
+    60 00000056 48893C25[18000000]          mov     [.trian], rdi          ; сохраняется адрес ship
+    61 0000005E 48893425[10000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+    62                                  
+    63                                      ; Ввод корабля из файла
+    64 00000066 488B3C25[10000000]          mov     rdi, [.FILE]
+    65 0000006E 48BE-                       mov     rsi, .infmt         ; Формат - 1-й аргумент
+    65 00000070 [0800000000000000] 
+    66 00000078 488B1425[18000000]          mov     rdx, [.trian]       ; &a int s.displacement
+    67 00000080 488B0C25[18000000]          mov     rcx, [.trian]
+    68 00000088 4883C104                    add     rcx, 4              ; &b = &a + 4 int type
+    69 0000008C 4C8B0425[18000000]          mov     r8, [.trian]
+    70 00000094 4983C008                    add     r8, 8               ; &c = &x + 4+4 int s.speed
+    71 00000098 4C8B0C25[18000000]          mov     r9, [.trian]
+    72 000000A0 4983C10C                    add     r9, 12               ; &d = &x + 4+4+4 double s.distance
+    73 000000A4 B801000000                  mov     rax, 1              ; нет чисел с плавающей точкой
+    74 000000A9 E8(00000000)                call    fscanf
+    75                                      ;mov rdi,.outf
+    76                                  ;    call printf
+    77 000000AE C9                      leave
+    78 000000AF C3                      ret
+    79                                  
+    80                                  global InPlane
+    81                                  InPlane:
+    82                                  section .data
+    83 00000019 256425642564256C67-         .infmt db "%d%d%d%lg",0
+    83 00000022 00                 
+    84 00000023 706C616E6500                .outf db "plane",0
+    85                                  section .bss
+    86 00000020 <res 00000008>              .FILE   resq    1   ; временное хранение указателя на файл
+    87 00000028 <res 00000008>              .plane  resq    1   ; адрес треугольника
+    88                                  section .text
+    89 000000B0 55                      push rbp
+    90 000000B1 4889E5                  mov rbp, rsp
+    91                                  
+    92                                      ; Сохранение принятых аргументов
+    93 000000B4 48893C25[28000000]          mov     [.plane], rdi          ; сохраняется адрес треугольника
+    94 000000BC 48893425[20000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+    95                                  
+    96                                      ; Ввод корабля из файла
+    97 000000C4 488B3C25[20000000]          mov     rdi, [.FILE]
+    98 000000CC 48BE-                       mov     rsi, .infmt         ; Формат - 1-й аргумент
+    98 000000CE [1900000000000000] 
+    99 000000D6 488B1425[28000000]          mov     rdx, [.plane]       ; &a int flightrange
+   100 000000DE 488B0C25[28000000]          mov     rcx, [.plane]
+   101 000000E6 4883C104                    add     rcx, 4              ; &b = &a + 4 int liftingcompacity
+   102 000000EA 4C8B0425[28000000]          mov     r8, [.plane]
+   103 000000F2 4983C008                    add     r8, 8               ; &c = &x + 4+4 int s.speed
+   104 000000F6 4C8B0C25[28000000]          mov     r9, [.plane]
+   105 000000FE 4983C10C                    add     r9, 12               ; &d = &x + 4+4+4 double s.distance
+   106 00000102 B801000000                  mov     rax, 1              ; нет чисел с плавающей точкой
+   107 00000107 E8(00000000)                call    fscanf
+   108                                      ;mov rdi,.outf
+   109                                  ;    call printf
+   110                                  
+   111 0000010C C9                      leave
+   112 0000010D C3                      ret
+   113                                  ; // Ввод параметров обобщенной фигуры из файла
+   114                                  ; int InTransport(void *s, FILE *ifst) {
+   115                                  ;     int k;
+   116                                  ;     fscanf(ifst, "%d", &k);
+   117                                  ;     switch(k) {
+   118                                  ;         case 1:
+   119                                  ;             *((int*)s) = RECTANGLE;
+   120                                  ;             InRectangle(s+intSize, ifst);
+   121                                  ;             return 1;
+   122                                  ;         case 2:
+   123                                  ;             *((int*)s) = TRIANGLE;
+   124                                  ;             InShip(s+intSize, ifst);
+   125                                  ;             return 1;
+   126                                  ;         default:
+   127                                  ;             return 0;
+   128                                  ;     }
+   129                                  ; }
+   130                                  global InTransport
+   131                                  InTransport:
+   132                                  section .data
+   133 00000029 256400                      .tagFormat   db      "%d",0
+   134 0000002C 5461672069733A2025-         .tagOutFmt   db     "Tag is: %d",10,0
+   134 00000035 640A00             
+   135                                  section .bss
+   136 00000030 <res 00000008>              .FILE       resq    1   ; временное хранение указателя на файл
+   137 00000038 <res 00000008>              .ptransport     resq    1   ; адрес фигуры
+   138 00000040 <res 00000004>              .transportTag   resd    1   ; признак фигуры
+   139                                  section .text
+   140 0000010E 55                      push rbp
+   141 0000010F 4889E5                  mov rbp, rsp
+   142                                  
+   143                                      ; Сохранение принятых аргументов
+   144 00000112 48893C25[38000000]          mov     [.ptransport], rdi          ; сохраняется адрес фигуры
+   145 0000011A 48893425[30000000]          mov     [.FILE], rsi            ; сохраняется указатель на файл
+   146                                  
+   147                                      ; чтение признака фигуры и его обработка
+   148 00000122 488B3C25[30000000]          mov     rdi, [.FILE]
+   149 0000012A 48BE-                       mov     rsi, .tagFormat
+   149 0000012C [2900000000000000] 
+   150 00000134 488B1425[38000000]          mov     rdx, [.ptransport]      ; адрес начала фигуры (ее признак)
+   151 0000013C 4831C0                      xor     rax, rax            ; нет чисел с плавающей точкой
+   152 0000013F E8(00000000)                call    fscanf
+   153                                  
+   154                                      ;; Тестовый вывод признака фигуры
+   155                                  ;     mov     rdi, .tagOutFmt
+   156                                  ;     mov     rax, [.ptransport]
+   157                                  ;     mov     esi, [rax]
+   158                                  ;     call    printf
+   159                                  
+   160 00000144 488B0C25[38000000]          mov rcx, [.ptransport]          ; загрузка адреса начала фигуры
+   161 0000014C 8B01                        mov eax, [rcx]              ; и получение прочитанного признака
+   162 0000014E 3B0425[00000000]            cmp eax, [TRAIN]
+   163 00000155 7416                        je .trainIn
+   164 00000157 3B0425[00000000]            cmp eax, [SHIP]
+   165 0000015E 742D                        je .shipIn
+   166 00000160 3B0425[00000000]            cmp eax, [PLANE]
+   167 00000167 7444                        je .planeIn
+   168 00000169 31C0                        xor eax, eax    ; Некорректный признак - обнуление кода возврата
+   169 0000016B EB60                        jmp     .return
+   170                                  .trainIn:
+   171                                      ; Ввод прямоугольника
+   172 0000016D 488B3C25[38000000]          mov     rdi, [.ptransport]
+   173 00000175 4883C704                    add     rdi, 4
+   174 00000179 488B3425[30000000]          mov     rsi, [.FILE]
+   175 00000181 E87AFEFFFF                  call    InTrain
+   176 00000186 B801000000                  mov     rax, 1  ; Код возврата - true
+   177 0000018B EB40                        jmp     .return
+   178                                  .shipIn:
+   179                                      ; Ввод треугольника
+   180 0000018D 488B3C25[38000000]          mov     rdi, [.ptransport]
+   181 00000195 4883C704                    add     rdi, 4
+   182 00000199 488B3425[30000000]          mov     rsi, [.FILE]
+   183 000001A1 E8ACFEFFFF                  call    InShip
+   184 000001A6 B801000000                  mov     rax, 1  ; Код возврата - true
+   185 000001AB EB20                        jmp     .return
+   186                                  .planeIn:
+   187 000001AD 488B3C25[38000000]          mov     rdi, [.ptransport]
+   188 000001B5 4883C704                    add     rdi, 4
+   189 000001B9 488B3425[30000000]          mov     rsi, [.FILE]
+   190 000001C1 E8EAFEFFFF                  call    InPlane
+   191 000001C6 B801000000                  mov     rax, 1  ; Код возврата - true
+   192 000001CB EB00                        jmp     .return
+   193                                  .return:
+   194                                  
+   195 000001CD C9                      leave
+   196 000001CE C3                      ret
+   197                                  
+   198                                  ; // Ввод содержимого контейнера из указанного файла
+   199                                  ; void InContainer(void *c, int *len, FILE *ifst) {
+   200                                  ;     void *tmp = c;
+   201                                  ;     while(!feof(ifst)) {
+   202                                  ;         if(InTransport(tmp, ifst)) {
+   203                                  ;             tmp = tmp + shapeSize;
+   204                                  ;             (*len)++;
+   205                                  ;         }
+   206                                  ;     }
+   207                                  ; }
+   208                                  global InContainer
+   209                                  InContainer:
+   210                                  section .bss
+   211 00000044 <res 00000008>              .pcont  resq    1   ; адрес контейнера
+   212 0000004C <res 00000008>              .plen   resq    1   ; адрес для сохранения числа введенных элементов
+   213 00000054 <res 00000008>              .FILE   resq    1   ; указатель на файл
+   214                                  section .text
+   215 000001CF 55                      push rbp
+   216 000001D0 4889E5                  mov rbp, rsp
+   217                                  
+   218 000001D3 48893C25[44000000]          mov [.pcont], rdi   ; сохраняется указатель на контейнер
+   219 000001DB 48893425[4C000000]          mov [.plen], rsi    ; сохраняется указатель на длину
+   220 000001E3 48891425[54000000]          mov [.FILE], rdx    ; сохраняется указатель на файл
+   221                                      ; В rdi адрес начала контейнера
+   222 000001EB 4831DB                      xor rbx, rbx        ; число фигур = 0
+   223 000001EE 4889D6                      mov rsi, rdx        ; перенос указателя на файл
+   224                                  .loop:
+   225                                      ; сохранение рабочих регистров
+   226 000001F1 57                          push rdi
+   227 000001F2 53                          push rbx
+   228                                  
+   229 000001F3 488B3425[54000000]          mov     rsi, [.FILE]
+   230 000001FB B800000000                  mov     rax, 0      ; нет чисел с плавающей точкой
+   231 00000200 E809FFFFFF                  call    InTransport     ; ввод фигуры
+   232 00000205 4883F800                    cmp rax, 0          ; проверка успешности ввода
+   233 00000209 7E0B                        jle  .return        ; выход, если признак меньше или равен 0
+   234                                  
+   235 0000020B 5B                          pop rbx
+   236 0000020C 48FFC3                      inc rbx
+   237                                  
+   238 0000020F 5F                          pop rdi
+   239 00000210 4883C718                    add rdi, 24             ; адрес следующей фигуры
+   240                                  
+   241 00000214 EBDB                        jmp .loop
+   242                                  .return:
+   243 00000216 488B0425[4C000000]          mov rax, [.plen]    ; перенос указателя на длину
+   244 0000021E 8918                        mov [rax], ebx      ; занесение длины
+   245 00000220 C9                      leave
+   246 00000221 C3                      ret
+   247                                  

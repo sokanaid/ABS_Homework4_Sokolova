@@ -1,0 +1,336 @@
+     1                                  ; file.asm - использование файлов в NASM
+     2                                  extern printf
+     3                                  extern fprintf
+     4                                  
+     5                                  extern IdealTimeTrain
+     6                                  extern IdealTimeShip
+     7                                  extern IdealTimePlane
+     8                                  
+     9                                  extern TRAIN
+    10                                  extern SHIP
+    11                                  extern PLANE
+    12                                  
+    13                                  ;----------------------------------------------
+    14                                  ;void Out(train &t, ofstream &ofst) {
+    15                                  ;    ofst << "It is a train: number of railway carriage = "
+    16                                  ;         << t.numberOfRailwayCarriage << ", speed = " << t.speed
+    17                                  ;         << ", distance = " << t.distance
+    18                                  ;         << ". Ideal time = " << IdealTime(t) << "\n";
+    19                                  ;}
+    20                                  global OutTrain
+    21                                  OutTrain:
+    22                                  section .data
+    23 00000000 497420697320612074-         .outfmt db "It is a train: number of railway carriage = %d, speed = %d, distance = %lg. Ideal time = %lg",10,0
+    23 00000009 7261696E3A206E756D-
+    23 00000012 626572206F66207261-
+    23 0000001B 696C77617920636172-
+    23 00000024 7269616765203D2025-
+    23 0000002D 642C20737065656420-
+    23 00000036 3D2025642C20646973-
+    23 0000003F 74616E6365203D2025-
+    23 00000048 6C672E20496465616C-
+    23 00000051 2074696D65203D2025-
+    23 0000005A 6C670A00           
+    24                                  section .bss
+    25 00000000 <res 00000008>              .prect  resq  1
+    26 00000008 <res 00000008>              .FILE   resq  1       ; временное хранение указателя на файл
+    27 00000010 <res 00000008>              .p      resq  1       ; вычисленный периметр прямоугольника
+    28                                  section .text
+    29 00000000 55                      push rbp
+    30 00000001 4889E5                  mov rbp, rsp
+    31                                  
+    32                                      ; Сохранени принятых аргументов
+    33 00000004 48893C25[00000000]          mov     [.prect], rdi          ; сохраняется адрес поезда
+    34 0000000C 48893425[08000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+    35                                  
+    36                                      ; Вычисление идеального времени поезда (адрес уже в rdi)
+    37 00000014 488B3C25[00000000]          mov     rdi, [.prect]
+    38 0000001C E8(00000000)                call    IdealTimeTrain
+    39 00000021 F20F110425-                 movsd   [.p], xmm0          ; сохранение (может лишнее) идельного времени
+    39 00000026 [10000000]         
+    40                                  
+    41                                      ; Вывод информации о поезде в консоль
+    42                                  ;     mov     rdi, .outfmt        ; Формат - 1-й аргумент
+    43                                  ;     mov     rax, [.prect]       ; адрес прямоугольника
+    44                                  ;     mov     esi, [rax]          ; x
+    45                                  ;     mov     edx, [rax+4]        ; y
+    46                                  ;     movsd   xmm0, [.p]
+    47                                  ;     mov     rax, 1              ; есть числа с плавающей точкой
+    48                                  ;     call    printf
+    49                                  
+    50                                      ; Вывод информации о поезде в файл
+    51 0000002A 488B3C25[08000000]          mov     rdi, [.FILE]
+    52 00000032 48BE-                       mov     rsi, .outfmt        ; Формат - 2-й аргумент
+    52 00000034 [0000000000000000] 
+    53 0000003C 488B0425[00000000]          mov     rax, [.prect]        ; адрес поезда
+    54 00000044 8B10                        mov     edx, [rax]          ; x
+    55 00000046 8B4804                      mov     ecx, [rax+4]        ; y
+    56 00000049 F20F104008                  movsd   xmm0, [rax+8]
+    57 0000004E F20F100C25-                 movsd   xmm1, [.p]
+    57 00000053 [10000000]         
+    58 00000057 B801000000                  mov     rax, 1              ; есть числа с плавающей точкой
+    59 0000005C E8(00000000)                call    fprintf
+    60                                  
+    61 00000061 C9                      leave
+    62 00000062 C3                      ret
+    63                                  
+    64                                  ;----------------------------------------------
+    65                                  ; // Вывод параметров корабля в файл
+    66                                  ;void Out(ship &s, ofstream &ofst) {
+    67                                  ;    ofst << "It is a ship: displacement = "
+    68                                  ;         << s.displacement << ", type = " << s.type << ", speed = " << s.speed
+    69                                  ;         << ", distance = " << s.distance
+    70                                  ;         << ". Ideal time = " << IdealTime(s) << "\n";
+    71                                  ;}
+    72                                  global OutShip
+    73                                  OutShip:
+    74                                  section .data
+    75 0000005E 497420697320612073-         .outfmt db "It is a ship: type = %d, displacement =  %d, speed = %d, distance =  %lg. Ideal time = %lg",10,0
+    75 00000067 6869703A2074797065-
+    75 00000070 203D2025642C206469-
+    75 00000079 73706C6163656D656E-
+    75 00000082 74203D202025642C20-
+    75 0000008B 7370656564203D2025-
+    75 00000094 642C2064697374616E-
+    75 0000009D 6365203D2020256C67-
+    75 000000A6 2E20496465616C2074-
+    75 000000AF 696D65203D20256C67-
+    75 000000B8 0A00               
+    76                                  section .bss
+    77 00000018 <res 00000008>              .ptrian  resq  1
+    78 00000020 <res 00000008>              .FILE   resq  1       ; временное хранение указателя на файл
+    79 00000028 <res 00000008>              .p      resq  1       ; вычисленный периметр треугольника
+    80                                  section .text
+    81 00000063 55                      push rbp
+    82 00000064 4889E5                  mov rbp, rsp
+    83                                  
+    84                                      ; Сохранени принятых аргументов
+    85 00000067 48893C25[18000000]          mov     [.ptrian], rdi        ; сохраняется адрес ship
+    86 0000006F 48893425[20000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+    87                                  
+    88                                      ; Вычисление периметра треугольника (адрес уже в rdi)
+    89 00000077 E8(00000000)                call    IdealTimeShip
+    90 0000007C F20F110425-                 movsd   [.p], xmm0          ; сохранение (может лишнее) периметра
+    90 00000081 [28000000]         
+    91                                  
+    92                                      ; Вывод информации о треугольнике в консоль
+    93                                  ;     mov     rdi, .outfmt        ; Формат - 1-й аргумент
+    94                                  ;     mov     rax, [.ptrian]       ; адрес треугольника
+    95                                  ;     mov     esi, [rax]          ; a
+    96                                  ;     mov     edx, [rax+4]        ; b
+    97                                  ;     mov     ecx, [rax+8]        ; c
+    98                                  ;     movsd   xmm0, [.p]
+    99                                  ;     mov     rax, 1              ; есть числа с плавающей точкой
+   100                                  ;     call    printf
+   101                                  
+   102                                      ; Вывод информации о ship в файл
+   103 00000085 488B3C25[20000000]          mov     rdi, [.FILE]
+   104 0000008D 48BE-                       mov     rsi, .outfmt        ; Формат - 2-й аргумент
+   104 0000008F [5E00000000000000] 
+   105 00000097 488B0425[18000000]          mov     rax, [.ptrian]      ; адрес треугольника
+   106 0000009F 488B08                      mov     rcx,[rax]          ; 0 int displacement
+   107 000000A2 488B5004                    mov     rdx, [rax+4]        ; +4 int type
+   108 000000A6 4C8B4008                    mov     r8, [rax+8]       ; +4+4 int speed
+   109 000000AA F20F10400C                  movsd   xmm0, [rax+12]    ; +4+4+4 double distance
+   110 000000AF F20F100C25-                 movsd   xmm1, [.p]
+   110 000000B4 [28000000]         
+   111 000000B8 B801000000                  mov     rax, 1              ; есть числа с плавающей точкой
+   112 000000BD E8(00000000)                call    fprintf
+   113                                  
+   114 000000C2 C9                      leave
+   115 000000C3 C3                      ret
+   116                                  
+   117                                  ;// Вывод параметров самолета в поток
+   118                                  ;void Out(plane &p, ofstream &ofst) {
+   119                                  ;    ofst << "It is a plane: flight range = "
+   120                                  ;         << p.flightRange << ", lifting capacity = " << p.liftingCapacity << ", speed = " << p.speed
+   121                                  ;         << ", distance = " << p.distance
+   122                                  ;         << ". Ideal time = " << IdealTime(p) << "\n";
+   123                                  ;}
+   124                                  global OutPlane
+   125                                  OutPlane:
+   126                                  section .data
+   127 000000BA 497420697320612070-         .outfmt db "It is a plane: flight range =  %d, lifting capacity = %d, speed = %d, distance = %lg. Ideal time = %lg",10,0
+   127 000000C3 6C616E653A20666C69-
+   127 000000CC 6768742072616E6765-
+   127 000000D5 203D202025642C206C-
+   127 000000DE 696674696E67206361-
+   127 000000E7 706163697479203D20-
+   127 000000F0 25642C207370656564-
+   127 000000F9 203D2025642C206469-
+   127 00000102 7374616E6365203D20-
+   127 0000010B 256C672E2049646561-
+   127 00000114 6C2074696D65203D20-
+   127 0000011D 256C670A00         
+   128                                  section .bss
+   129 00000030 <res 00000008>              .prect  resq  1
+   130 00000038 <res 00000008>              .FILE   resq  1       ; временное хранение указателя на файл
+   131 00000040 <res 00000008>              .p      resq  1       ; вычисленный периметр прямоугольника
+   132                                  section .text
+   133 000000C4 55                      push rbp
+   134 000000C5 4889E5                  mov rbp, rsp
+   135                                  
+   136                                      ; Сохранени принятых аргументов
+   137 000000C8 48893C25[30000000]          mov     [.prect], rdi          ; сохраняется адрес поезда
+   138 000000D0 48893425[38000000]          mov     [.FILE], rsi          ; сохраняется указатель на файл
+   139                                  
+   140                                      ; Вычисление идеального времени поезда (адрес уже в rdi)
+   141 000000D8 488B3C25[30000000]          mov     rdi, [.prect]
+   142 000000E0 E8(00000000)                call    IdealTimePlane
+   143 000000E5 F20F110425-                 movsd   [.p], xmm0          ; сохранение (может лишнее) идельного времени
+   143 000000EA [40000000]         
+   144                                  
+   145                                      ; Вывод информации о поезде в консоль
+   146                                  ;     mov     rdi, .outfmt        ; Формат - 1-й аргумент
+   147                                  ;     mov     rax, [.prect]       ; адрес прямоугольника
+   148                                  ;     mov     esi, [rax]          ; x
+   149                                  ;     mov     edx, [rax+4]        ; y
+   150                                  ;     movsd   xmm0, [.p]
+   151                                  ;     mov     rax, 1              ; есть числа с плавающей точкой
+   152                                  ;     call    printf
+   153                                  
+   154                                      ; Вывод информации о поезде в файл
+   155 000000EE 488B3C25[38000000]          mov     rdi, [.FILE]
+   156 000000F6 48BE-                       mov     rsi, .outfmt        ; Формат - 2-й аргумент
+   156 000000F8 [BA00000000000000] 
+   157 00000100 488B0425[30000000]          mov     rax, [.prect]        ; адрес поезда
+   158 00000108 488B10                      mov     rdx, [rax]          ; x
+   159 0000010B 488B4804                    mov     rcx, [rax+4]        ; y
+   160 0000010F 4C8B4008                    mov     r8, [rax+8]
+   161 00000113 F20F10400C                  movsd   xmm0, [rax+12]
+   162 00000118 F20F100C25-                 movsd   xmm1, [.p]
+   162 0000011D [40000000]         
+   163 00000121 B801000000                  mov     rax, 1              ; есть числа с плавающей точкой
+   164 00000126 E8(00000000)                call    fprintf
+   165                                  
+   166 0000012B C9                      leave
+   167 0000012C C3                      ret
+   168                                  ;----------------------------------------------
+   169                                  ; // Вывод параметров текущей фигуры в файл
+   170                                  ; void OutShape(void *s, FILE *ofst) {
+   171                                  ;     int k = *((int*)s);
+   172                                  ;     if(k == RECTANGLE) {
+   173                                  ;         OutRectangle(s+intSize, ofst);
+   174                                  ;     }
+   175                                  ;     else if(k == TRIANGLE) {
+   176                                  ;         OutShip(s+intSize, ofst);
+   177                                  ;     }
+   178                                  ;     else {
+   179                                  ;         fprintf(ofst, "Incorrect figure!\n");
+   180                                  ;     }
+   181                                  ; }
+   182                                  global OutShape
+   183                                  OutShape:
+   184                                  section .data
+   185 00000122 496E636F7272656374-         .erShape db "Incorrect figure!",10,0
+   185 0000012B 20666967757265210A-
+   185 00000134 00                 
+   186 00000135 74797065207472616E-         .outf db "type transoirt  = %d",10,0
+   186 0000013E 736F69727420203D20-
+   186 00000147 25640A00           
+   187                                  section .text
+   188 0000012D 55                      push rbp
+   189 0000012E 4889E5                  mov rbp, rsp
+   190                                  
+   191                                      ; В rdi адрес фигуры
+   192 00000131 8B07                        mov eax, [rdi]
+   193                                      
+   194                                  ;    mov rsi, [rdi]
+   195                                  ;    mov rdi, .outf
+   196                                  ;    mov rax , 0
+   197                                  ;    call printf
+   198                                  ;    mov [rdi], rsi
+   199                                  ;    
+   200                                      
+   201 00000133 3B0425[00000000]            cmp eax, [TRAIN]
+   202 0000013A 7428                        je trainOut
+   203 0000013C 3B0425[00000000]            cmp eax, [SHIP]
+   204 00000143 742A                        je shipOut
+   205 00000145 3B0425[00000000]            cmp eax, [PLANE]
+   206 0000014C 742C                        je planeOut
+   207 0000014E 48BF-                       mov rdi, .erShape
+   207 00000150 [2201000000000000] 
+   208 00000158 B800000000                  mov rax, 0
+   209 0000015D E8(00000000)                call fprintf
+   210 00000162 EB21                        jmp     return
+   211                                  trainOut:
+   212                                      ; Вывод train
+   213 00000164 4883C704                    add     rdi, 4
+   214 00000168 E893FEFFFF                  call    OutTrain
+   215 0000016D EB16                        jmp     return
+   216                                  shipOut:
+   217                                      ; Вывод ship
+   218 0000016F 4883C704                    add     rdi, 4
+   219 00000173 E8EBFEFFFF                  call    OutShip
+   220 00000178 EB0B                        jmp     return
+   221                                  planeOut:
+   222 0000017A 4883C704                    add     rdi, 4
+   223 0000017E E841FFFFFF                  call    OutPlane
+   224 00000183 EB00                        jmp     return
+   225                                  return:
+   226 00000185 C9                      leave
+   227 00000186 C3                      ret
+   228                                  
+   229                                  ;----------------------------------------------
+   230                                  ; // Вывод содержимого контейнера в файл
+   231                                  ; void OutContainer(void *c, int len, FILE *ofst) {
+   232                                  ;     void *tmp = c;
+   233                                  ;     fprintf(ofst, "Container contains %d elements.\n", len);
+   234                                  ;     for(int i = 0; i < len; i++) {
+   235                                  ;         fprintf(ofst, "%d: ", i);
+   236                                  ;         OutShape(tmp, ofst);
+   237                                  ;         tmp = tmp + shapeSize;
+   238                                  ;     }
+   239                                  ; }
+   240                                  global OutContainer
+   241                                  OutContainer:
+   242                                  section .data
+   243 0000014B 25643A2000                  numFmt  db  "%d: ",0
+   244                                  section .bss
+   245 00000048 <res 00000008>              .pcont  resq    1   ; адрес контейнера
+   246 00000050 <res 00000004>              .len    resd    1   ; адрес для сохранения числа введенных элементов
+   247 00000054 <res 00000008>              .FILE   resq    1   ; указатель на файл
+   248                                  section .text
+   249 00000187 55                      push rbp
+   250 00000188 4889E5                  mov rbp, rsp
+   251                                  
+   252 0000018B 48893C25[48000000]          mov [.pcont], rdi   ; сохраняется указатель на контейнер
+   253 00000193 893425[50000000]            mov [.len],   esi     ; сохраняется число элементов
+   254 0000019A 48891425[54000000]          mov [.FILE],  rdx    ; сохраняется указатель на файл
+   255                                  
+   256                                      ; В rdi адрес начала контейнера
+   257 000001A2 4889F3                      mov rbx, rsi            ; число фигур
+   258 000001A5 31C9                        xor ecx, ecx            ; счетчик фигур = 0
+   259 000001A7 4889D6                      mov rsi, rdx            ; перенос указателя на файл
+   260                                  .loop:
+   261 000001AA 39D9                        cmp ecx, ebx            ; проверка на окончание цикла
+   262 000001AC 7D4D                        jge .return             ; Перебрали все фигуры
+   263                                  
+   264 000001AE 53                          push rbx
+   265 000001AF 51                          push rcx
+   266                                  
+   267                                      ; Вывод номера фигуры
+   268 000001B0 488B3C25[54000000]          mov     rdi, [.FILE]    ; текущий указатель на файл
+   269 000001B8 48BE-                       mov     rsi, numFmt     ; формат для вывода фигуры
+   269 000001BA [4B01000000000000] 
+   270 000001C2 89CA                        mov     edx, ecx        ; индекс текущей фигуры
+   271 000001C4 4831C0                      xor     rax, rax,       ; только целочисленные регистры
+   272 000001C7 E8(00000000)                call fprintf
+   273                                  
+   274                                      ; Вывод текущей фигуры
+   275 000001CC 488B3C25[48000000]          mov     rdi, [.pcont]
+   276 000001D4 488B3425[54000000]          mov     rsi, [.FILE]
+   277 000001DC E84CFFFFFF                  call OutShape     ; Получение периметра первой фигуры
+   278                                  
+   279 000001E1 59                          pop rcx
+   280 000001E2 5B                          pop rbx
+   281 000001E3 FFC1                        inc ecx                 ; индекс следующей фигуры
+   282                                  
+   283 000001E5 488B0425[48000000]          mov     rax, [.pcont]
+   284 000001ED 4883C018                    add     rax, 24         ; адрес следующей фигуры
+   285 000001F1 48890425[48000000]          mov     [.pcont], rax
+   286 000001F9 EBAF                        jmp .loop
+   287                                  .return:
+   288 000001FB C9                      leave
+   289 000001FC C3                      ret
+   290                                  
