@@ -1,0 +1,7 @@
+Sorted Container:
+0: It is a ship: type = 3, displacement =  11544, speed = 315, distance =  1165.68. Ideal time = 3.70057
+1: It is a ship: type = 1, displacement =  27994, speed = 394, distance =  2779.91. Ideal time = 7.05561
+2: It is a train: number of railway carriage = 20, speed = 39, distance = 1253.8. Ideal time = 32.1487
+3: It is a train: number of railway carriage = 2, speed = 127, distance = 6092.22. Ideal time = 47.9702
+4: It is a plane: flight range =  7137, lifting capacity = 30436, speed = 16, distance = 4399.05. Ideal time = 274.941
+. Calculaton time = 0 sec, 1857 nsec

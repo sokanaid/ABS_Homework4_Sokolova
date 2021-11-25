@@ -1,0 +1,101 @@
+Filled container:
+0: It is a ship: type = 3, displacement =  19457, speed = 177, distance =  1625.6. Ideal time = 9.18418
+1: It is a train: number of railway carriage = 7, speed = 1, distance = 7782.11. Ideal time = 7782.11
+2: It is a train: number of railway carriage = 13, speed = 283, distance = 8621.68. Ideal time = 30.4653
+3: It is a ship: type = 1, displacement =  14508, speed = 212, distance =  8595.41. Ideal time = 40.5444
+4: It is a ship: type = 2, displacement =  104, speed = 202, distance =  5043.9. Ideal time = 24.9698
+5: It is a ship: type = 1, displacement =  22932, speed = 167, distance =  3738.42. Ideal time = 22.3857
+6: It is a ship: type = 2, displacement =  3615, speed = 152, distance =  6488.71. Ideal time = 42.6889
+7: It is a train: number of railway carriage = 2, speed = 35, distance = 386.873. Ideal time = 11.0535
+8: It is a train: number of railway carriage = 17, speed = 486, distance = 1954.88. Ideal time = 4.02239
+9: It is a ship: type = 1, displacement =  4350, speed = 57, distance =  1430.77. Ideal time = 25.1012
+10: It is a plane: flight range =  16752, lifting capacity = 104, speed = 198, distance = 7366.38. Ideal time = 37.2039
+11: It is a train: number of railway carriage = 5, speed = 279, distance = 335.273. Ideal time = 1.2017
+12: It is a plane: flight range =  13589, lifting capacity = 11134, speed = 309, distance = 496.685. Ideal time = 1.60739
+13: It is a plane: flight range =  7889, lifting capacity = 15808, speed = 192, distance = 5476.93. Ideal time = 28.5257
+14: It is a plane: flight range =  30632, lifting capacity = 16296, speed = 419, distance = 5773.9. Ideal time = 13.7802
+15: It is a plane: flight range =  27671, lifting capacity = 3412, speed = 99, distance = 506.308. Ideal time = 5.11422
+16: It is a plane: flight range =  18318, lifting capacity = 24085, speed = 414, distance = 5393.6. Ideal time = 13.028
+17: It is a train: number of railway carriage = 6, speed = 39, distance = 576.967. Ideal time = 14.794
+18: It is a plane: flight range =  8187, lifting capacity = 11106, speed = 286, distance = 5598.78. Ideal time = 19.5762
+19: It is a ship: type = 2, displacement =  12688, speed = 396, distance =  3117.17. Ideal time = 7.87164
+20: It is a plane: flight range =  31078, lifting capacity = 13292, speed = 352, distance = 286.385. Ideal time = 0.813594
+21: It is a train: number of railway carriage = 16, speed = 423, distance = 7419.61. Ideal time = 17.5404
+22: It is a train: number of railway carriage = 19, speed = 487, distance = 6372.59. Ideal time = 13.0854
+23: It is a plane: flight range =  14254, lifting capacity = 25944, speed = 493, distance = 9173.8. Ideal time = 18.6081
+24: It is a plane: flight range =  14925, lifting capacity = 2528, speed = 315, distance = 3690.03. Ideal time = 11.7144
+25: It is a train: number of railway carriage = 9, speed = 298, distance = 9883.24. Ideal time = 33.1652
+26: It is a plane: flight range =  5519, lifting capacity = 11806, speed = 234, distance = 5257.35. Ideal time = 22.4673
+27: It is a ship: type = 1, displacement =  27612, speed = 99, distance =  7307.38. Ideal time = 73.8119
+28: It is a ship: type = 1, displacement =  6878, speed = 83, distance =  530.85. Ideal time = 6.39578
+29: It is a train: number of railway carriage = 15, speed = 118, distance = 4644.3. Ideal time = 39.3585
+30: It is a train: number of railway carriage = 13, speed = 464, distance = 8170.62. Ideal time = 17.6091
+31: It is a train: number of railway carriage = 4, speed = 488, distance = 6405.9. Ideal time = 13.1268
+32: It is a train: number of railway carriage = 6, speed = 36, distance = 2022.52. Ideal time = 56.1811
+33: It is a ship: type = 3, displacement =  26218, speed = 110, distance =  7590.65. Ideal time = 69.0059
+34: It is a train: number of railway carriage = 17, speed = 222, distance = 2490.52. Ideal time = 11.2186
+35: It is a plane: flight range =  17779, lifting capacity = 84, speed = 18, distance = 3566.05. Ideal time = 198.114
+36: It is a plane: flight range =  11714, lifting capacity = 14097, speed = 221, distance = 8781.74. Ideal time = 39.7364
+37: It is a train: number of railway carriage = 18, speed = 154, distance = 1690.33. Ideal time = 10.9762
+38: It is a ship: type = 1, displacement =  11904, speed = 307, distance =  1546.25. Ideal time = 5.03664
+39: It is a plane: flight range =  26341, lifting capacity = 11825, speed = 325, distance = 4846.95. Ideal time = 14.9137
+40: It is a train: number of railway carriage = 10, speed = 457, distance = 6536.74. Ideal time = 14.3036
+41: It is a train: number of railway carriage = 1, speed = 490, distance = 2189.64. Ideal time = 4.46865
+42: It is a train: number of railway carriage = 17, speed = 171, distance = 979.182. Ideal time = 5.72621
+43: It is a train: number of railway carriage = 11, speed = 215, distance = 2873.37. Ideal time = 13.3645
+44: It is a train: number of railway carriage = 20, speed = 362, distance = 6497.48. Ideal time = 17.9488
+45: It is a train: number of railway carriage = 17, speed = 412, distance = 7636.01. Ideal time = 18.534
+46: It is a plane: flight range =  27383, lifting capacity = 21512, speed = 342, distance = 5143.39. Ideal time = 15.0392
+47: It is a plane: flight range =  4300, lifting capacity = 6639, speed = 428, distance = 4357.73. Ideal time = 10.1816
+48: It is a train: number of railway carriage = 1, speed = 260, distance = 1221.4. Ideal time = 4.69769
+49: It is a ship: type = 3, displacement =  23961, speed = 339, distance =  3767.24. Ideal time = 11.1128
+50: It is a train: number of railway carriage = 17, speed = 317, distance = 6604.92. Ideal time = 20.8357
+51: It is a plane: flight range =  29889, lifting capacity = 14169, speed = 326, distance = 4549.31. Ideal time = 13.9549
+52: It is a ship: type = 1, displacement =  9200, speed = 455, distance =  2597. Ideal time = 5.70769
+53: It is a train: number of railway carriage = 20, speed = 275, distance = 9058.7. Ideal time = 32.9407
+54: It is a plane: flight range =  2243, lifting capacity = 9705, speed = 310, distance = 351.651. Ideal time = 1.13436
+55: It is a ship: type = 1, displacement =  5707, speed = 312, distance =  5403.86. Ideal time = 17.3201
+56: It is a plane: flight range =  19853, lifting capacity = 11253, speed = 418, distance = 919.226. Ideal time = 2.19911
+57: It is a plane: flight range =  25934, lifting capacity = 19571, speed = 281, distance = 8837.53. Ideal time = 31.4503
+58: It is a train: number of railway carriage = 6, speed = 201, distance = 9849.88. Ideal time = 49.0044
+59: It is a train: number of railway carriage = 11, speed = 153, distance = 9884.49. Ideal time = 64.6045
+60: It is a train: number of railway carriage = 19, speed = 1, distance = 2569.59. Ideal time = 2569.59
+61: It is a train: number of railway carriage = 19, speed = 412, distance = 125.406. Ideal time = 0.304383
+62: It is a ship: type = 1, displacement =  2095, speed = 59, distance =  4148.66. Ideal time = 70.3163
+63: It is a plane: flight range =  9167, lifting capacity = 13481, speed = 149, distance = 6831.04. Ideal time = 45.8459
+64: It is a plane: flight range =  22421, lifting capacity = 29102, speed = 277, distance = 9899.27. Ideal time = 35.7374
+65: It is a ship: type = 2, displacement =  3418, speed = 104, distance =  9838.29. Ideal time = 94.5989
+66: It is a train: number of railway carriage = 17, speed = 349, distance = 789.517. Ideal time = 2.26223
+67: It is a train: number of railway carriage = 12, speed = 289, distance = 2334.9. Ideal time = 8.07924
+68: It is a plane: flight range =  9882, lifting capacity = 8325, speed = 275, distance = 4794.85. Ideal time = 17.4358
+69: It is a ship: type = 3, displacement =  14989, speed = 3, distance =  1038.39. Ideal time = 346.13
+70: It is a ship: type = 1, displacement =  23814, speed = 252, distance =  252.245. Ideal time = 1.00097
+71: It is a plane: flight range =  14247, lifting capacity = 29021, speed = 424, distance = 8433.87. Ideal time = 19.8912
+72: It is a ship: type = 2, displacement =  18348, speed = 473, distance =  5361.04. Ideal time = 11.3341
+73: It is a ship: type = 3, displacement =  7488, speed = 314, distance =  9717.66. Ideal time = 30.948
+74: It is a plane: flight range =  11797, lifting capacity = 2538, speed = 151, distance = 185.711. Ideal time = 1.22987
+75: It is a plane: flight range =  13129, lifting capacity = 11347, speed = 363, distance = 7021.26. Ideal time = 19.3423
+76: It is a train: number of railway carriage = 6, speed = 18, distance = 5140.24. Ideal time = 285.569
+77: It is a ship: type = 3, displacement =  10001, speed = 293, distance =  7424.3. Ideal time = 25.3389
+78: It is a ship: type = 2, displacement =  4444, speed = 320, distance =  9614.01. Ideal time = 30.0438
+79: It is a ship: type = 3, displacement =  2609, speed = 203, distance =  5884.7. Ideal time = 28.9887
+80: It is a ship: type = 1, displacement =  16929, speed = 243, distance =  2591.85. Ideal time = 10.666
+81: It is a train: number of railway carriage = 20, speed = 113, distance = 1788.24. Ideal time = 15.8251
+82: It is a plane: flight range =  8361, lifting capacity = 20722, speed = 267, distance = 8358.5. Ideal time = 31.3052
+83: It is a ship: type = 1, displacement =  2493, speed = 478, distance =  7995.41. Ideal time = 16.7268
+84: It is a train: number of railway carriage = 19, speed = 434, distance = 6638.74. Ideal time = 15.2966
+85: It is a ship: type = 1, displacement =  10415, speed = 262, distance =  3205.53. Ideal time = 12.2348
+86: It is a train: number of railway carriage = 15, speed = 486, distance = 8730.92. Ideal time = 17.9649
+87: It is a ship: type = 2, displacement =  28651, speed = 340, distance =  876.722. Ideal time = 2.57859
+88: It is a plane: flight range =  18701, lifting capacity = 1139, speed = 125, distance = 5084.56. Ideal time = 40.6765
+89: It is a train: number of railway carriage = 2, speed = 229, distance = 8537.37. Ideal time = 37.2811
+90: It is a ship: type = 2, displacement =  6703, speed = 343, distance =  3679.77. Ideal time = 10.7282
+91: It is a ship: type = 3, displacement =  15169, speed = 54, distance =  1220.57. Ideal time = 22.6031
+92: It is a plane: flight range =  3444, lifting capacity = 29150, speed = 55, distance = 6696.37. Ideal time = 121.752
+93: It is a train: number of railway carriage = 20, speed = 418, distance = 1456.64. Ideal time = 3.48478
+94: It is a plane: flight range =  27327, lifting capacity = 28281, speed = 237, distance = 2335.88. Ideal time = 9.85603
+95: It is a train: number of railway carriage = 10, speed = 416, distance = 2959.37. Ideal time = 7.11387
+96: It is a plane: flight range =  11425, lifting capacity = 2517, speed = 80, distance = 3219.32. Ideal time = 40.2415
+97: It is a ship: type = 1, displacement =  10748, speed = 454, distance =  5005.34. Ideal time = 11.025
+98: It is a ship: type = 2, displacement =  20581, speed = 329, distance =  7580.59. Ideal time = 23.0413
+99: It is a plane: flight range =  21378, lifting capacity = 14827, speed = 289, distance = 3264.31. Ideal time = 11.2952
